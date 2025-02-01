@@ -23,6 +23,7 @@ jobs:
           echo VITE_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }} >> .env
           echo VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT_ID }} >> .env
           cat .env  # Optional: Debugging
+           echo "secrets=${{ secrets }}"
 
       - run: npm ci && npm run build
 
