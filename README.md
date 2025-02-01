@@ -4,7 +4,7 @@ A simple Todo web application built with React and Firebase.
 
 ## 🚀 Live Demo
 
-[Click here to view the live demo](https://fir-9-auth-5b31f.web.app/todos)
+[Click here to view the live demo](https://fir-9-auth-5b31f.web.app)
 
 ## 🛠 Technologies Used
 
