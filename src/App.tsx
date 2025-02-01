@@ -1,12 +1,17 @@
 import "./App.css";
-import logo from "./logo.svg";
+import { Routes, Route } from "react-router-dom";
+import AuthForm from "features/auth/AuthForm";
+import TodosPage from "features/todos/TodosPage";
+
+import "libs/firebase/firebaseConfig";
 
 const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
+      <Routes>
+        <Route path="/" element={<AuthForm />} />
+        <Route path="/todos" element={<TodosPage />} />
+      </Routes>
     </div>
   );
 };
