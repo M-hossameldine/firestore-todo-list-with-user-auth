@@ -18,6 +18,7 @@ const TodosPage: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState({
+    updatedTodoId: "",
     addTodoLoading: false,
     updateTodoLoading: false,
     deleteTodoLoading: false,
@@ -76,7 +77,11 @@ const TodosPage: React.FC = () => {
 
   const updateTodo = async (id: string, newText: string) => {
     if (!userId || !newText.trim()) return;
-    setLoading(prevState => ({ ...prevState, updateTodoLoading: true }));
+    setLoading(prevState => ({
+      ...prevState,
+      updateTodoLoading: true,
+      updatedTodoId: id,
+    }));
     try {
       await updateDoc(doc(db, "users", userId, "todos", id), {
         title: newText,
@@ -90,12 +95,20 @@ const TodosPage: React.FC = () => {
     } catch (error) {
       message.error("Failed to update todo");
     }
-    setLoading(prevState => ({ ...prevState, updateTodoLoading: false }));
+    setLoading(prevState => ({
+      ...prevState,
+      updateTodoLoading: false,
+      updatedTodoId: "",
+    }));
   };
 
   const deleteTodo = async (id: string) => {
     if (!userId) return;
-    setLoading(prevState => ({ ...prevState, deleteTodoLoading: true }));
+    setLoading(prevState => ({
+      ...prevState,
+      deleteTodoLoading: true,
+      updatedTodoId: id,
+    }));
     try {
       await deleteDoc(doc(db, "users", userId, "todos", id));
       setTodos(todos.filter(todo => todo.id !== id));
@@ -103,7 +116,11 @@ const TodosPage: React.FC = () => {
     } catch (error) {
       message.error("Failed to delete todo");
     }
-    setLoading(prevState => ({ ...prevState, deleteTodoLoading: false }));
+    setLoading(prevState => ({
+      ...prevState,
+      deleteTodoLoading: false,
+      updatedTodoId: "",
+    }));
   };
 
   const handleSignOut = async () => {
@@ -159,14 +176,18 @@ const TodosPage: React.FC = () => {
                     prompt("Edit Todo:", item.title) || item.title,
                   )
                 }
-                loading={loading.updateTodoLoading}
+                loading={
+                  loading.updateTodoLoading && item.id === loading.updatedTodoId
+                }
               >
                 Edit
               </Button>,
               <Button
                 danger
                 onClick={() => deleteTodo(item.id)}
-                loading={loading.deleteTodoLoading}
+                loading={
+                  loading.deleteTodoLoading && item.id === loading.updatedTodoId
+                }
               >
                 Delete
               </Button>,
