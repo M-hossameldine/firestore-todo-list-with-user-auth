@@ -15,7 +15,7 @@ A simple Todo web application built with React and Firebase.
 
 ## 📌 Features
 
-- User authentication (Sign up, Login, Logout)
+- User authentication (Sign up, Login, Logout, Persist login state)
 - CRUD operations on todos (Add, Edit, Delete, Retrieve)
 - Secure Firestore database access with rules
 
