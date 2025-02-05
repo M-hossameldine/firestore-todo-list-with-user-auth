@@ -1,13 +1,16 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import "libs/firebase/firebaseConfig";
+
+import React, { Suspense, useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { auth } from "libs/firebase/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import AuthForm from "features/auth/AuthForm";
-import TodosPage from "features/todos/TodosPage";
 import type { User } from "firebase/auth";
 
-import "libs/firebase/firebaseConfig";
+import LoadingSpinner from "components/LoadingSpinner";
+
+const AuthForm = React.lazy(() => import("features/auth/AuthForm"));
+const TodosPage = React.lazy(() => import("features/todos/TodosPage"));
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -24,21 +27,23 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Or your loading component
+    return <LoadingSpinner />;
   }
 
   return (
     <div className="App">
-      <Routes>
-        <Route
-          path="/"
-          element={user ? <Navigate to="/todos" /> : <AuthForm />}
-        />
-        <Route
-          path="/todos"
-          element={user ? <TodosPage /> : <Navigate to="/" />}
-        />
-      </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route
+            path="/"
+            element={user ? <Navigate to="/todos" /> : <AuthForm />}
+          />
+          <Route
+            path="/todos"
+            element={user ? <TodosPage /> : <Navigate to="/" />}
+          />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
