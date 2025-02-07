@@ -1,11 +1,9 @@
 import "./App.css";
 import "libs/firebase/firebaseConfig";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { auth } from "libs/firebase/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
-import type { User } from "firebase/auth";
+import { useInitAppAuth } from "hooks";
 
 import LoadingSpinner from "components/LoadingSpinner";
 
@@ -13,18 +11,7 @@ const AuthForm = React.lazy(() => import("features/auth/AuthForm"));
 const TodosPage = React.lazy(() => import("features/todos/TodosPage"));
 
 const App = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    // Cleanup subscription
-    return () => unsubscribe();
-  }, []);
+  const { user, loading } = useInitAppAuth();
 
   if (loading) {
     return <LoadingSpinner />;
